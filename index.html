@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- 
+    Note dari HD:
+    Siklus Admin - Kampus Pagi - Pulang Tido - Jam 12 - 6's Live - Repeat 
+  -->
+  <title>Form Gabung Grup WhatsApp</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('background.png'); /* Gambar latar belakang */
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form-container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #25D366;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1ebc57;
+    }
+
+    .spinner {
+      display: none;
+      width: 30px;
+      height: 30px;
+      border: 4px solid #ccc;
+      border-top-color: #25D366;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      position: absolute;
+      top: 15px;
+      right: 15px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Suara klik & sukses -->
+  <audio id="clickSound" src="click.mp3"></audio>
+  <audio id="successSound" src="success.mp3"></audio>
+
+  <div class="form-container">
+    <div class="spinner" id="spinner"></div>
+    <h2>Form Gabung WhatsApp</h2>
+    <form id="waForm">
+      <label>Nama Lengkap:</label>
+      <input type="text" id="nama" required>
+
+      <label>Nama ID TikTok:</label>
+      <input type="text" id="tiktok" required>
+
+      <label>UID Wuthering Waves:</label>
+      <input type="text" id="uid" required>
+
+      <button type="submit">Kirim ke WhatsApp Admin</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("waForm");
+    const spinner = document.getElementById("spinner");
+
+    const clickSound = document.getElementById("clickSound");
+    const successSound = document.getElementById("successSound");
+
+    form.addEventListener("submit", function(event){
+      event.preventDefault();
+      clickSound.play();
+
+      let nama = document.getElementById("nama").value.trim();
+      let tiktok = document.getElementById("tiktok").value.trim();
+      let uid = document.getElementById("uid").value.trim();
+
+      if (nama === "" || tiktok === "" || uid === "") {
+        alert("Semua kolom harus diisi ya!");
+        return;
+      }
+
+      if (!/^\d+$/.test(uid)) {
+        alert("UID harus berupa angka ya!");
+        return;
+      }
+
+      let konfirmasi = confirm(`Kamu yakin data sudah benar?\n\nNama: ${nama}\nTikTok: ${tiktok}\nUID: ${uid}`);
+      if (!konfirmasi) return;
+
+      spinner.style.display = "block";
+
+      setTimeout(() => {
+        successSound.play();
+
+        let pesan = `Halo Admin, saya ingin gabung grup. Berikut data saya:%0A` +
+                    `Nama Lengkap: ${nama}%0A` +
+                    `ID TikTok: ${tiktok}%0A` +
+                    `UID Wuthering Waves: ${uid}`;
+
+        let noAdmin = "6282173155205"; // Ganti dengan nomor admin milik HD
+
+        window.open(`https://wa.me/${noAdmin}?text=${pesan}`, "_blank");
+        spinner.style.display = "none";
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
